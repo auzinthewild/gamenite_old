@@ -12,7 +12,7 @@ const ListGames = () => {
         method: "DELETE",
       });
 
-      setGames(games.filter((todo) => todo.game_id !== id));
+      setGames(games.filter((game) => game.game_id !== id));
     } catch (err) {
       console.error(err.message);
     }

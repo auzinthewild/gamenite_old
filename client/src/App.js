@@ -2,16 +2,17 @@ import "./App.css";
 import React, { Fragment } from "react";
 
 // COMPONENTS
-
-import InputGame from "./components/manager/InputGame";
-import ListGames from "./components/manager/ListGames";
+import { InputGame, ListGames } from "./components/gameManager";
+import { GroupManager } from "./pages";
 
 function App() {
   return (
     <Fragment>
       <div className="container">
-        <InputGame />
+        {/* <InputGame />
         <ListGames />
+        <ListPlayers /> */}
+        <GroupManager />
       </div>
     </Fragment>
   );
