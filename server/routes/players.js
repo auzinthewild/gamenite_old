@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
     console.log(req.body);
     const { player_name, player_email } = req.body;
     const newPlayer = await pool.query(
-      "INSERT INTO games (player_name, player_email) VALUES($1, $2) RETURNING *",
+      "INSERT INTO players (player_name, player_email) VALUES($1, $2) RETURNING *",
       [player_name, player_email]
     );
     res.json(newPlayer.rows[0]);
@@ -50,7 +50,7 @@ router.put("/:player_id", async (req, res) => {
     const { player_id } = req.params;
     const { player_name, player_email } = req.body;
     const singlePlayer = await pool.query(
-      "UPDATE games SET player_name=$2, player_email=$3 WHERE player_id = $1",
+      "UPDATE players SET player_name=$2, player_email=$3 WHERE player_id = $1",
       [player_id, player_name, player_email]
     );
     res.json(`Player was updated!`);
