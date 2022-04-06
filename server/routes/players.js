@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// get all uses
+// get all players
 router.get("/", async (req, res) => {
   try {
     const allPlayers = await pool.query("SELECT * FROM players");

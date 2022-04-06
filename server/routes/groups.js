@@ -37,6 +37,100 @@ router.get("/:group_id", async (req, res) => {
       [group_id]
     );
     res.json(singleGroup.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get all players in a group using the the group_id
+router.get("/:group_id/players", async (req, res) => {
+  try {
+    console.log(req.params);
+    const { group_id } = req.params;
+    const groupPlayers = await pool.query(
+      'SELECT * FROM "group_players" LEFT JOIN players ON group_players.player_id = players.player_id WHERE group_id = $1',
+      [group_id]
+    );
+    res.json(groupPlayers.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get all games in a group using the group_id
+router.get("/:group_id/games", async (req, res) => {
+  try {
+    console.log(req.params);
+    const { group_id } = req.params;
+    const groupPlayers = await pool.query(
+      'SELECT * FROM "group_games" LEFT JOIN games ON group_games.game_id = games.game_id WHERE group_id = $1',
+      [group_id]
+    );
+    res.json(groupPlayers.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// add a game to the group inventory using the group_id and game_id
+router.post("/:group_id/games", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { group_id } = req.params;
+    const { game_id } = req.body;
+    const newGame = await pool.query(
+      'INSERT INTO "group_games" (group_id, game_id) VALUES($1, $2) RETURNING *',
+      [group_id, game_id]
+    );
+    res.json(newGame.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// delete a game from the group inventory using the group_id and game_id
+router.delete("/:group_id/games", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { group_id } = req.params;
+    const { game_id } = req.body;
+    const deleteGame = await pool.query(
+      'DELETE FROM "group_games" WHERE group_id = $1 AND game_id = $2',
+      [group_id, game_id]
+    );
+    res.json(`Game was deleted!`);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// add a player to the group using the group_id and player_id
+router.post("/:group_id/players", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { group_id } = req.params;
+    const { player_id } = req.body;
+    const newPlayer = await pool.query(
+      'INSERT INTO "group_players" (group_id, player_id) VALUES($1, $2) RETURNING *',
+      [group_id, player_id]
+    );
+    res.json(newPlayer.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// delete a player from the group roster using the group_id and player_id
+router.delete("/:group_id/players", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { group_id } = req.params;
+    const { player_id } = req.body;
+    const deletePlayer = await pool.query(
+      'DELETE FROM "group_players" WHERE group_id = $1 AND player_id = $2',
+      [group_id, player_id]
+    );
+    res.json(`Player was deleted!`);
   } catch (error) {
     console.error(error.message);
   }
