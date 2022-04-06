@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 
-const ListPlayers = () => {
+const ListGroupPlayers = () => {
   const [players, setPlayers] = useState([]);
 
   // delete player function
@@ -18,7 +18,7 @@ const ListPlayers = () => {
 
   const getPlayers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/players");
+      const response = await fetch("http://localhost:5000/groups/3/players");
       const jsonData = await response.json();
       //   console.log(jsonData);
       setPlayers(jsonData);
@@ -32,6 +32,7 @@ const ListPlayers = () => {
   }, []);
   return (
     <Fragment>
+      <h1>Group Players - </h1>
       <table>
         <thead>
           <tr>
@@ -58,4 +59,4 @@ const ListPlayers = () => {
   );
 };
 
-export default ListPlayers;
+export default ListGroupPlayers;

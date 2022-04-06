@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
 
-import { ListPlayers } from "../components/groupManager";
+import {
+  ListGroupPlayers,
+  ListGroupGames,
+  ListGroupEvents,
+} from "../components/groupManager";
 
 const GroupManager = () => {
   const [players, setPlayers] = useState(null);
   const [group, setGroup] = useState(null);
   return (
     <>
-      <ListPlayers />
+      <div>
+        <ListGroupPlayers />
+        <ListGroupGames />
+        <ListGroupEvents />
+      </div>
     </>
   );
 };
