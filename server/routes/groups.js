@@ -167,4 +167,19 @@ router.delete("/:group_id", async (req, res) => {
   }
 });
 
+// get all events for a group using the group_id
+router.get("/:group_id/events", async (req, res) => {
+  try {
+    console.log(req.params);
+    const { group_id } = req.params;
+    const groupEvents = await pool.query(
+      'SELECT * FROM "events" WHERE group_id = $1',
+      [group_id]
+    );
+    res.json(groupEvents.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;
