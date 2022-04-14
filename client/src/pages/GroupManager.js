@@ -6,12 +6,15 @@ import {
   ListGroupEvents,
 } from "../components/groupManager";
 
-const GroupManager = () => {
+const GroupManager = ({ auth }) => {
   const [players, setPlayers] = useState(null);
   const [group, setGroup] = useState(null);
   return (
     <>
       <div>
+        <p>
+          You are logged inas {auth && auth.nickname ? auth.nickname : null}
+        </p>
         <ListGroupPlayers />
         <ListGroupGames />
         <ListGroupEvents />
