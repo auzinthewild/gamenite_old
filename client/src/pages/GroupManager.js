@@ -12,9 +12,7 @@ const GroupManager = ({ auth }) => {
   return (
     <>
       <div>
-        <p>
-          You are logged inas {auth && auth.nickname ? auth.nickname : null}
-        </p>
+        <p>You are logged in as {auth && auth.email ? auth.email : null}</p>
         <ListGroupPlayers />
         <ListGroupGames />
         <ListGroupEvents />
