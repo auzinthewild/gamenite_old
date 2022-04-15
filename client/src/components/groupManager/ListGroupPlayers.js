@@ -1,8 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 
-const ListGroupPlayers = () => {
+const ListGroupPlayers = ({ groupID }) => {
   const [players, setPlayers] = useState([]);
-
   // delete player function
   const deletePlayer = async (id) => {
     try {
@@ -16,11 +15,12 @@ const ListGroupPlayers = () => {
     }
   };
 
-  const getPlayers = async () => {
+  const getPlayers = async (group_id) => {
     try {
-      const response = await fetch("http://localhost:5000/groups/3/players");
+      const response = await fetch(
+        `http://localhost:5000/groups/${group_id}/players`
+      );
       const jsonData = await response.json();
-      //   console.log(jsonData);
       setPlayers(jsonData);
     } catch (err) {
       console.error(err.message);
@@ -28,8 +28,9 @@ const ListGroupPlayers = () => {
   };
 
   useEffect(() => {
-    getPlayers();
-  }, []);
+    getPlayers(groupID);
+  }, [groupID]);
+
   return (
     <Fragment>
       <h1>Group Players - </h1>

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 
-const ListGroupEvents = () => {
+const ListGroupEvents = ({ groupID }) => {
   const [events, setGroupEvents] = useState([]);
 
   // delete player function
@@ -18,7 +18,9 @@ const ListGroupEvents = () => {
 
   const getGroupEvents = async () => {
     try {
-      const response = await fetch("http://localhost:5000/groups/3/events");
+      const response = await fetch(
+        `http://localhost:5000/groups/${groupID}/events`
+      );
       const jsonData = await response.json();
       setGroupEvents(jsonData);
     } catch (err) {
@@ -28,7 +30,7 @@ const ListGroupEvents = () => {
 
   useEffect(() => {
     getGroupEvents();
-  }, []);
+  }, [groupID]);
   return (
     <Fragment>
       <h1>Group Events - </h1>

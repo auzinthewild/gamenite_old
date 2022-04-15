@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// get a single player
+// get a single player by player id
 router.get("/:player_id", async (req, res) => {
   try {
     console.log(req.params);
@@ -37,6 +37,36 @@ router.get("/:player_id", async (req, res) => {
       [player_id]
     );
     res.json(singlePlayer.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// get a single player by their email
+router.get("/email/:player_email", async (req, res) => {
+  try {
+    console.log(req.params);
+    const { player_email } = req.params;
+    const singlePlayer = await pool.query(
+      "SELECT * FROM players WHERE player_email = $1",
+      [player_email]
+    );
+    res.json(singlePlayer.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// get a single player's group ID from their player id
+router.get("/group/:player_id", async (req, res) => {
+  try {
+    console.log(req.params);
+    const { player_id } = req.params;
+    const playerGroup = await pool.query(
+      "SELECT group_id FROM group_players WHERE player_id = $1",
+      [player_id]
+    );
+    res.json(playerGroup.rows[0]);
   } catch (error) {
     console.error(error.message);
   }
