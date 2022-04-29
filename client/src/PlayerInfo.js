@@ -3,7 +3,7 @@ export const getPlayerInfo = async (playerEmail) => {
     playerID: null,
     playerName: null,
     playerEmail: playerEmail,
-    playerGroupID: null,
+    playerGroupIDs: [],
   };
 
   // get player id and name using their email
@@ -18,13 +18,14 @@ export const getPlayerInfo = async (playerEmail) => {
     console.error(err.message);
   }
 
-  // get player's group id, if they have one
+  // get player's group ids, if they have any
   try {
     const response = await fetch(
       `http://localhost:5000/players/group/${playerData.playerID}`
     );
     const jsonData = await response.json();
-    playerData.playerGroupID = jsonData.group_id;
+    jsonData.forEach((group) => playerData.playerGroupIDs.push(group.group_id));
+    // playerData.playerGroupID = jsonData.group_id;
   } catch (err) {
     console.error(err.message);
   }

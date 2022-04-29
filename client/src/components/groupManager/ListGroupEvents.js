@@ -1,4 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import { AddEventModal } from ".";
 
 const ListGroupEvents = ({ groupID }) => {
   const [events, setGroupEvents] = useState([]);
@@ -33,8 +36,8 @@ const ListGroupEvents = ({ groupID }) => {
   }, [groupID]);
   return (
     <Fragment>
-      <h1>Group Events - </h1>
-      <table>
+      <h1>Upcoming Events</h1>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th scope="col">Event ID</th>
@@ -43,12 +46,6 @@ const ListGroupEvents = ({ groupID }) => {
           </tr>
         </thead>
         <tbody>
-          {/* <tr>
-            <td>Mark</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr> */}
           {events.map((event) => (
             <tr key={event.event_id}>
               <td>{event.event_id}</td>
@@ -57,7 +54,8 @@ const ListGroupEvents = ({ groupID }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+      <AddEventModal />
     </Fragment>
   );
 };

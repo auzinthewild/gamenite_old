@@ -1,4 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import { ManageGamesModal } from ".";
 
 const ListGroupGames = ({ groupID }) => {
   const [groupGames, setGroupGames] = useState([]);
@@ -16,6 +19,10 @@ const ListGroupGames = ({ groupID }) => {
     }
   };
 
+  // open the modal to manage the groups' games
+  const manageGroupGames = async (group_id) => {};
+
+  // get all the games the group owns
   const getGroupGames = async (group_id) => {
     try {
       const response = await fetch(
@@ -35,24 +42,18 @@ const ListGroupGames = ({ groupID }) => {
 
   return (
     <Fragment>
-      <h1>Group Games - </h1>
-      <table>
+      <h1>Owned Games</h1>
+
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
             <th scope="col">Players</th>
             <th scope="col">Game Duration</th>
-            <th scope="col">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
-          {/* <tr>
-            <td>Mark</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr> */}
           {groupGames.map((game) => (
             <tr key={game.game_id}>
               <td>{game.game_name}</td>
@@ -61,16 +62,11 @@ const ListGroupGames = ({ groupID }) => {
                 {game.min_players} to {game.max_players}
               </td>
               <td>{game.game_dur} hours</td>
-              <td>
-                {/* <EditGame /> */}
-                <button onClick={() => deleteGroupGame(game.game_id)}>
-                  Delete
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+      <ManageGamesModal />
     </Fragment>
   );
 };

@@ -1,7 +1,13 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import InvitePlayerModal from "./InvitePlayerModal";
+import { PlayerContext } from "./GroupManager";
 
 const ListGroupPlayers = ({ groupID }) => {
   const [players, setPlayers] = useState([]);
+  const { playerInfo } = useContext(PlayerContext);
+  console.log(playerInfo);
   // delete player function
   const deletePlayer = async (id) => {
     try {
@@ -33,8 +39,9 @@ const ListGroupPlayers = ({ groupID }) => {
 
   return (
     <Fragment>
-      <h1>Group Players - </h1>
-      <table>
+      <h1>Group Members</h1>
+      <h2>{playerInfo.playerName}</h2>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -42,12 +49,6 @@ const ListGroupPlayers = ({ groupID }) => {
           </tr>
         </thead>
         <tbody>
-          {/* <tr>
-            <td>Mark</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr> */}
           {players.map((player) => (
             <tr key={player.player_id}>
               <td>{player.player_name}</td>
@@ -55,7 +56,8 @@ const ListGroupPlayers = ({ groupID }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+      <InvitePlayerModal />
     </Fragment>
   );
 };

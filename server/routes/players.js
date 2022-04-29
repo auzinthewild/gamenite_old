@@ -57,7 +57,7 @@ router.get("/email/:player_email", async (req, res) => {
   }
 });
 
-// get a single player's group ID from their player id
+// get a single player's group IDs from their player id
 router.get("/group/:player_id", async (req, res) => {
   try {
     console.log(req.params);
@@ -66,7 +66,7 @@ router.get("/group/:player_id", async (req, res) => {
       "SELECT group_id FROM group_players WHERE player_id = $1",
       [player_id]
     );
-    res.json(playerGroup.rows[0]);
+    res.json(playerGroup.rows);
   } catch (error) {
     console.error(error.message);
   }
