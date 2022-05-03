@@ -7,7 +7,7 @@ import { PlayerContext } from "./GroupManager";
 const ListGroupPlayers = ({ groupID }) => {
   const [players, setPlayers] = useState([]);
   const { playerInfo } = useContext(PlayerContext);
-  console.log(playerInfo);
+  console.log(groupID[0]);
   // delete player function
   const deletePlayer = async (id) => {
     try {
@@ -34,12 +34,12 @@ const ListGroupPlayers = ({ groupID }) => {
   };
 
   useEffect(() => {
-    getPlayers(groupID);
+    getPlayers(groupID[0]);
   }, [groupID]);
 
   return (
     <Fragment>
-      <h1>Group Members</h1>
+      <h1>Members of {groupID[1]}</h1>
       <h2>{playerInfo.playerName}</h2>
       <Table striped bordered hover>
         <thead>
@@ -57,7 +57,7 @@ const ListGroupPlayers = ({ groupID }) => {
           ))}
         </tbody>
       </Table>
-      <InvitePlayerModal />
+      <InvitePlayerModal groupID={groupID[0]} />
     </Fragment>
   );
 };

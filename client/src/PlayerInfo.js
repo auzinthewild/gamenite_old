@@ -24,7 +24,9 @@ export const getPlayerInfo = async (playerEmail) => {
       `http://localhost:5000/players/group/${playerData.playerID}`
     );
     const jsonData = await response.json();
-    jsonData.forEach((group) => playerData.playerGroupIDs.push(group.group_id));
+    jsonData.forEach((group) =>
+      playerData.playerGroupIDs.push([group.group_id, group.group_name])
+    );
     // playerData.playerGroupID = jsonData.group_id;
   } catch (err) {
     console.error(err.message);

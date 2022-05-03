@@ -12,11 +12,11 @@ const GroupManager = ({ playerInfo, currentGroup }) => {
         <PlayerContext.Provider value={{ playerInfo }}>
           <p>
             Hi, {playerInfo.playerName}! You are logged in as{" "}
-            {playerInfo.playerEmail} and your group ID is {currentGroup}
+            {playerInfo.playerEmail} and your group ID is {currentGroup[0]}
           </p>
           <ListGroupPlayers groupID={currentGroup} />
-          <ListGroupGames groupID={currentGroup} />
-          <ListGroupEvents groupID={currentGroup} />
+          <ListGroupGames groupID={currentGroup[0]} />
+          <ListGroupEvents groupID={currentGroup[0]} />
         </PlayerContext.Provider>
       </div>
     </>

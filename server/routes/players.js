@@ -57,13 +57,13 @@ router.get("/email/:player_email", async (req, res) => {
   }
 });
 
-// get a single player's group IDs from their player id
+// get a single player's group IDs and group names from their player id
 router.get("/group/:player_id", async (req, res) => {
   try {
     console.log(req.params);
     const { player_id } = req.params;
     const playerGroup = await pool.query(
-      "SELECT group_id FROM group_players WHERE player_id = $1",
+      'SELECT group_players.group_id, "game-group".group_name FROM group_players LEFT JOIN "game-group" ON group_players.group_id = "game-group".group_id WHERE group_players.player_id = $1',
       [player_id]
     );
     res.json(playerGroup.rows);
