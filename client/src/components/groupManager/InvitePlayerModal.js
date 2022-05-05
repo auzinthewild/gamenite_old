@@ -50,7 +50,7 @@ function InvitePlayerModal({ groupID }) {
   const sendGroupInvite = async (groupID, player_id) => {
     try {
       const body = {};
-      const response = await fetch("http://localhost:5000/games", {
+      const response = await fetch("http://localhost:5000/invite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
