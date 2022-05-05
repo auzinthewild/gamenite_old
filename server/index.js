@@ -22,7 +22,6 @@ const {
 
 app.use(cors());
 app.use(express.json()); //req.body
-app.use(passport.initialize());
 
 /* Set Security Configs */
 app.use(helmet());
@@ -38,7 +37,7 @@ app.use(
 );
 
 app.use(csurf());
-
+app.use(passport.initialize());
 //app.use(limiter);
 
 // ROUTES

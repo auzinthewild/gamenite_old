@@ -22,8 +22,9 @@ router.get(
 );
 
 router.get("/current-session", (req, res) => {
+  console.log(`yoo ${JSON.stringify(req.session.jwt)}`);
   passport.authenticate("jwt", { session: false }, (err, user) => {
-    console.log(`err ${err} user ${user}`);
+    console.log(`err ${err} user ${JSON.stringify(user)}`);
     if (err || !user) {
       res.send(false);
     } else {

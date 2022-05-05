@@ -1,5 +1,6 @@
 const express = require("express");
 const pool = require("../db");
+const passport = require("passport");
 const router = express.Router();
 
 // create a group

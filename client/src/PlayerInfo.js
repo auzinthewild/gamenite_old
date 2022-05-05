@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getPlayerInfo = async (playerEmail) => {
   let playerData = {
     playerID: null,
@@ -8,10 +10,9 @@ export const getPlayerInfo = async (playerEmail) => {
 
   // get player id and name using their email
   try {
-    const response = await fetch(
-      `http://localhost:5000/players/email/${playerEmail}`
-    );
+    const response = await fetch(`/players/email/${playerEmail}`);
     const jsonData = await response.json();
+    console.log(jsonData.data);
     playerData.playerID = jsonData.player_id;
     playerData.playerName = jsonData.player_name;
   } catch (err) {
@@ -20,9 +21,7 @@ export const getPlayerInfo = async (playerEmail) => {
 
   // get player's group ids, if they have any
   try {
-    const response = await fetch(
-      `http://localhost:5000/players/group/${playerData.playerID}`
-    );
+    const response = await fetch(`/players/group/${playerData.playerID}`);
     const jsonData = await response.json();
     jsonData.forEach((group) =>
       playerData.playerGroupIDs.push([group.group_id, group.group_name])
