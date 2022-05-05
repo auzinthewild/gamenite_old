@@ -2,7 +2,6 @@ const express = require("express");
 const pool = require("../db");
 const router = express.Router();
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
 const jwtRequired = passport.authenticate("jwt", { session: false });
 
 // create a player
