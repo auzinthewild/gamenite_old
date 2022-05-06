@@ -1,9 +1,14 @@
-import { useState, useEffect, useContext } from "react";
-import { ListGroupPlayers, ListGroupGames, ListGroupEvents } from ".";
+import { useContext } from "react";
+import {
+  GroupHeader,
+  ListGroupPlayers,
+  ListGroupGames,
+  ListGroupEvents,
+} from ".";
 import { PlayerContext } from "../../App";
 
 const GroupManager = () => {
-  const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
+  const { playerInfo } = useContext(PlayerContext);
 
   return (
     <>
@@ -15,7 +20,7 @@ const GroupManager = () => {
             Logout
           </a>
         </p>
-
+        <GroupHeader />
         <ListGroupPlayers />
         <ListGroupGames />
         <ListGroupEvents />

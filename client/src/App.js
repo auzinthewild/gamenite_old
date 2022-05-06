@@ -2,6 +2,7 @@ import "./App.css";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import React, { Fragment, useEffect, useState, createContext } from "react";
+import { getGroupInfo } from "./GroupInfo";
 import { getPlayerInfo } from "./PlayerInfo";
 import LoopCircleLoading from "./components/LoopCircleLoading";
 
@@ -78,7 +79,9 @@ function App() {
 
   useEffect(() => {
     if (currentGroup && currentGroup[0] > 0) {
-      console.log("");
+      getGroupInfo(currentGroup).then((data) => {
+        setCurrentGroupInfo(data);
+      });
     }
   }, [currentGroup]);
 
@@ -92,19 +95,28 @@ function App() {
         <LoopCircleLoading />
       </div>
     );
-  } else if (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0) {
+  }
+  if (auth && currentGroup[0] > 0 && currentGroupInfo.groupID != null) {
     return (
       <Fragment>
         <div className="container">
           <PlayerContext.Provider
-            value={{ playerInfo, currentGroup, csrfToken }}
+            value={{ playerInfo, currentGroup, currentGroupInfo }}
           >
             <GroupManager />
           </PlayerContext.Provider>{" "}
         </div>
       </Fragment>
     );
-  } else if (auth && currentGroup[0] === -1) {
+  } else if (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0) {
+    return (
+      <div>
+        <LoopCircleLoading />
+      </div>
+    );
+  }
+
+  if (auth && currentGroup[0] === -1) {
     return (
       <Fragment>
         <PlayerContext.Provider
