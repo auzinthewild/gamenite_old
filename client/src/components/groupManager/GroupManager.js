@@ -7,10 +7,7 @@ const GroupManager = () => {
   const [players, setPlayers] = useState(null);
   const [group, setGroup] = useState(null);
   const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
-  console.log(`yarp ${JSON.stringify(currentGroup)}`);
-  // axios.post(`/groups/1/invite/austin.bodin@gmail.com`, {
-  //   playerEmail: "austin.bodin@gmail.com",
-  // });
+  console.log(`yarp ${JSON.stringify(csrfToken)}`);
 
   return (
     <>

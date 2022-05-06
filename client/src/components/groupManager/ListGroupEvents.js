@@ -21,9 +21,9 @@ const ListGroupEvents = () => {
     }
   };
 
-  const getGroupEvents = async () => {
+  const getGroupEvents = async (current_group) => {
     try {
-      const response = await fetch(`/groups/${currentGroup[0]}/events`);
+      const response = await fetch(`/groups/${current_group}/events`);
       const jsonData = await response.json();
       setGroupEvents(jsonData);
     } catch (err) {
@@ -32,8 +32,8 @@ const ListGroupEvents = () => {
   };
 
   useEffect(() => {
-    getGroupEvents();
-  });
+    getGroupEvents(currentGroup[0]);
+  }, [currentGroup]);
 
   return (
     <Fragment>

@@ -1,10 +1,12 @@
-import react, { useState } from "react";
+import react, { useState, useContext } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { PlayerContext } from "../../App";
 
-function InvitePlayerModal({ groupID }) {
-  console.log(`group id ${groupID}`);
+function InvitePlayerModal() {
+  const { currentGroup, csrfToken } = useContext(PlayerContext);
+  let groupID = currentGroup[0];
   const [show, setShow] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   let responseMessage = "";
@@ -29,9 +31,7 @@ function InvitePlayerModal({ groupID }) {
 
     try {
       const response = await fetch(`/groups/${groupID}/players`);
-
       const jsonData = await response.json();
-      console.log(JSON.stringify(jsonData));
       let playerIDs = [];
       jsonData.forEach((element) => {
         playerIDs.push(element.player_id);
@@ -44,20 +44,20 @@ function InvitePlayerModal({ groupID }) {
     }
   };
 
-  const sendGroupInvite = async (groupID, player_id) => {
-    try {
-      const body = {};
-      const response = await fetch("/invite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      //   console.log(response);
-      window.location = "/";
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+  // const sendGroupInvite = async (groupID, player_id) => {
+  //   try {
+  //     const body = {};
+  //     const response = await fetch("/invite", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(body),
+  //     });
+  //     //   console.log(response);
+  //     window.location = "/";
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -70,8 +70,6 @@ function InvitePlayerModal({ groupID }) {
         } else if (data === 2) {
           responseMessage = `That player is already a member of this group!`;
         } else if (data === 3) {
-          let token = document.head.querySelector('meta[name="csrf-token"]');
-
           axios.post(`/groups/1/invite/${inviteEmail}`, {
             playerEmail: inviteEmail,
           });

@@ -36,6 +36,7 @@ function App() {
         .then(({ data }) => {
           console.log(`meep ${JSON.stringify(data)}`);
           setCsrfToken(data.csrfToken);
+          axios.defaults.headers.post["X-CSRF-Token"] = data.csrfToken;
         })
         .then(
           getPlayerInfo(auth.email).then((data) => {

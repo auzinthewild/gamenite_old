@@ -206,19 +206,19 @@ router.get("/:group_id/events", jwtRequired, async (req, res) => {
 // );
 
 // invite a player to group based on player email
-// router.post(
-//   "/:group_id/invite/:player_email",
-//   jwtRequired,
-//   async (req, res) => {
-//     console.log(`req ${JSON.stringify(req.headers)}`);
-//     try {
-//       //sendMail();
-//       console.log("email sent!");
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   }
-// );
+router.post(
+  "/:group_id/invite/:player_email",
+  jwtRequired,
+  async (req, res) => {
+    console.log(`req ${JSON.stringify(req.headers)}`);
+    try {
+      sendMail();
+      console.log("email sent!");
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+);
 
 // router.post(
 //   "/:group_id/invite/:player_email",

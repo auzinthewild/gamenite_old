@@ -44,20 +44,7 @@ app.use(function (req, res, next) {
   next();
 });
 //app.use(limiter);
-const jwtRequired = passport.authenticate("jwt", { session: false });
-app.post(
-  "/groups/:group_id/invite/:player_email",
 
-  async (req, res) => {
-    console.log(`req ${JSON.stringify(req.headers)}`);
-    try {
-      sendMail();
-      console.log("email sent!");
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-);
 // ROUTES
 
 app.use("/auth", authRoutes);
