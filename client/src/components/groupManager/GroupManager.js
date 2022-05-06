@@ -1,23 +1,27 @@
-import { useState, useEffect, useContext, createContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ListGroupPlayers, ListGroupGames, ListGroupEvents } from ".";
+import axios from "axios";
+import { PlayerContext } from "../../App";
 
-export const PlayerContext = createContext();
-
-const GroupManager = ({ playerInfo, currentGroup }) => {
+const GroupManager = () => {
   const [players, setPlayers] = useState(null);
   const [group, setGroup] = useState(null);
+  const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
+  console.log(`yarp ${JSON.stringify(currentGroup)}`);
+  // axios.post(`/groups/1/invite/austin.bodin@gmail.com`, {
+  //   playerEmail: "austin.bodin@gmail.com",
+  // });
+
   return (
     <>
       <div>
-        <PlayerContext.Provider value={{ playerInfo }}>
-          <p>
-            Hi, {playerInfo.playerName}! You are logged in as{" "}
-            {playerInfo.playerEmail} and your group ID is {currentGroup[0]}
-          </p>
-          <ListGroupPlayers groupID={currentGroup} />
-          <ListGroupGames groupID={currentGroup[0]} />
-          <ListGroupEvents groupID={currentGroup[0]} />
-        </PlayerContext.Provider>
+        <p>
+          Hi, {playerInfo.playerName}! You are logged in as{" "}
+          {playerInfo.playerEmail} and your group ID is {currentGroup[0]}
+        </p>
+        <ListGroupPlayers />
+        <ListGroupGames />
+        <ListGroupEvents />
       </div>
     </>
   );

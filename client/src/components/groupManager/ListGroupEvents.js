@@ -1,10 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { AddEventModal } from ".";
+import { PlayerContext } from "../../App";
 
-const ListGroupEvents = ({ groupID }) => {
+const ListGroupEvents = () => {
   const [events, setGroupEvents] = useState([]);
+  const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
 
   // delete player function
   const deleteGroupEvent = async (id) => {
@@ -21,7 +23,7 @@ const ListGroupEvents = ({ groupID }) => {
 
   const getGroupEvents = async () => {
     try {
-      const response = await fetch(`/groups/${groupID}/events`);
+      const response = await fetch(`/groups/${currentGroup[0]}/events`);
       const jsonData = await response.json();
       setGroupEvents(jsonData);
     } catch (err) {
@@ -31,7 +33,8 @@ const ListGroupEvents = ({ groupID }) => {
 
   useEffect(() => {
     getGroupEvents();
-  }, [groupID]);
+  });
+
   return (
     <Fragment>
       <h1>Upcoming Events</h1>

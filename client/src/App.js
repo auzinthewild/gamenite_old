@@ -20,6 +20,7 @@ function App() {
     playerEmail: "",
     playerGroupIDs: [],
   });
+  const [csrfToken, setCsrfToken] = useState("");
 
   useEffect(() => {
     axios.get("/auth/current-session").then(({ data }) => {
@@ -30,11 +31,19 @@ function App() {
   useEffect(() => {
     console.log(`auth info ${JSON.stringify(auth)}`);
     if (auth) {
-      getPlayerInfo(auth.email).then((data) => {
-        console.log("info");
-        console.log(data);
-        setPlayerInfo(data);
-      });
+      axios
+        .get("/auth/get-token")
+        .then(({ data }) => {
+          console.log(`meep ${JSON.stringify(data)}`);
+          setCsrfToken(data.csrfToken);
+        })
+        .then(
+          getPlayerInfo(auth.email).then((data) => {
+            console.log("info");
+            console.log(data);
+            setPlayerInfo(data);
+          })
+        );
     }
   }, [auth]);
 
@@ -56,11 +65,13 @@ function App() {
   if (auth && currentGroup !== -1 && currentGroup !== 0) {
     return (
       <Fragment>
-        <PlayerContext.Provider value={(playerInfo, currentGroup)}>
-          <div className="container">
-            <GroupManager playerInfo={playerInfo} currentGroup={currentGroup} />
-          </div>
-        </PlayerContext.Provider>
+        <div className="container">
+          <PlayerContext.Provider
+            value={{ playerInfo, currentGroup, csrfToken }}
+          >
+            <GroupManager />
+          </PlayerContext.Provider>{" "}
+        </div>
       </Fragment>
     );
   } else if (auth && currentGroup === -1) {

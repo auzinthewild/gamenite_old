@@ -1,23 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { ManageGamesModal } from ".";
+import { PlayerContext } from "../../App";
 
-const ListGroupGames = ({ groupID }) => {
+const ListGroupGames = () => {
   const [groupGames, setGroupGames] = useState([]);
-
-  // delete game function
-  const deleteGroupGame = async (id) => {
-    try {
-      const deleteGroupGame = await fetch(`/games/${id}`, {
-        method: "DELETE",
-      });
-
-      setGroupGames(groupGames.filter((game) => game.game_id !== id));
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
 
   // open the modal to manage the groups' games
   const manageGroupGames = async (group_id) => {};
@@ -35,8 +24,8 @@ const ListGroupGames = ({ groupID }) => {
   };
 
   useEffect(() => {
-    getGroupGames(groupID);
-  }, [groupID]);
+    getGroupGames(currentGroup[0]);
+  }, [currentGroup]);
 
   return (
     <Fragment>

@@ -59,6 +59,7 @@ app.post(
   }
 );
 // ROUTES
+
 app.use("/auth", authRoutes);
 app.use("/games", gamesRoutes);
 app.use("/events", eventsRoutes);

@@ -1,13 +1,12 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
-import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import InvitePlayerModal from "./InvitePlayerModal";
-import { PlayerContext } from "./GroupManager";
+import { PlayerContext } from "../../App";
 
-const ListGroupPlayers = ({ groupID }) => {
+const ListGroupPlayers = () => {
   const [players, setPlayers] = useState([]);
-  const { playerInfo } = useContext(PlayerContext);
-  console.log(groupID[0]);
+  const { playerInfo, currentGroup, csrfToken } = useContext(PlayerContext);
+  console.log(currentGroup[0]);
   // delete player function
   const deletePlayer = async (id) => {
     try {
@@ -32,12 +31,12 @@ const ListGroupPlayers = ({ groupID }) => {
   };
 
   useEffect(() => {
-    getPlayers(groupID[0]);
-  }, [groupID]);
+    getPlayers(currentGroup[0]);
+  }, [currentGroup]);
 
   return (
     <Fragment>
-      <h1>Members of {groupID[1]}</h1>
+      <h1>Members of {currentGroup[1]}</h1>
       <h2>{playerInfo.playerName}</h2>
       <Table striped bordered hover>
         <thead>
@@ -55,7 +54,7 @@ const ListGroupPlayers = ({ groupID }) => {
           ))}
         </tbody>
       </Table>
-      <InvitePlayerModal groupID={groupID[0]} />
+      <InvitePlayerModal />
     </Fragment>
   );
 };

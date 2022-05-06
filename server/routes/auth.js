@@ -21,6 +21,12 @@ router.get(
   }
 );
 
+router.get("/get-token", (req, res) =>
+  res.json({
+    csrfToken: req.csrfToken(),
+  })
+);
+
 router.get("/current-session", (req, res) => {
   console.log(`yoo ${JSON.stringify(req.session.jwt)}`);
   passport.authenticate("jwt", { session: false }, (err, user) => {
