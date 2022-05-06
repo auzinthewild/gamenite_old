@@ -9,7 +9,7 @@ const ListGroupEvents = ({ groupID }) => {
   // delete player function
   const deleteGroupEvent = async (id) => {
     try {
-      const deletePlayer = await fetch(`http://localhost:5000/events/${id}`, {
+      const deletePlayer = await fetch(`/events/${id}`, {
         method: "DELETE",
       });
 
@@ -21,9 +21,7 @@ const ListGroupEvents = ({ groupID }) => {
 
   const getGroupEvents = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/groups/${groupID}/events`
-      );
+      const response = await fetch(`/groups/${groupID}/events`);
       const jsonData = await response.json();
       setGroupEvents(jsonData);
     } catch (err) {

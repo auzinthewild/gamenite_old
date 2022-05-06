@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../db");
 const passport = require("passport");
+const sendMail = require("../invitePlayer");
 const router = express.Router();
 const jwtRequired = passport.authenticate("jwt", { session: false });
 
@@ -183,5 +184,54 @@ router.get("/:group_id/events", jwtRequired, async (req, res) => {
     console.error(err.message);
   }
 });
+
+// invite a player to group based on player email
+// router.post(
+//   "/:group_id/invite/:player_email",
+//   jwtRequired,
+//   async (req, res) => {
+//     try {
+//       console.log(req.body);
+//       const { group_id, player_email } = req.params;
+//       const { player_id } = req.body;
+//       const newPlayer = await pool.query(
+//         'INSERT INTO "group_players" (group_id, player_id) VALUES($1, $2) RETURNING *',
+//         [group_id, player_id]
+//       );
+//       res.json(newPlayer.rows[0]);
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   }
+// );
+
+// invite a player to group based on player email
+// router.post(
+//   "/:group_id/invite/:player_email",
+//   jwtRequired,
+//   async (req, res) => {
+//     console.log(`req ${JSON.stringify(req.headers)}`);
+//     try {
+//       //sendMail();
+//       console.log("email sent!");
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   }
+// );
+
+// router.post(
+//   "/:group_id/invite/:player_email",
+
+//   async (req, res) => {
+//     console.log(`req ${JSON.stringify(req.headers)}`);
+//     try {
+//       sendMail();
+//       console.log("email sent!");
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   }
+// );
 
 module.exports = router;

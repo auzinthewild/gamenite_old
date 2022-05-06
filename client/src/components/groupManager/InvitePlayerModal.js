@@ -1,4 +1,5 @@
 import react, { useState } from "react";
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
@@ -12,9 +13,7 @@ function InvitePlayerModal({ groupID }) {
 
   const checkValidEmail = async (playerEmail) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/players/email/${playerEmail}`
-      );
+      const response = await fetch(`/players/email/${playerEmail}`);
       const jsonData = await response.json();
       const player_id = jsonData.player_id;
       return player_id;
@@ -29,9 +28,7 @@ function InvitePlayerModal({ groupID }) {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/groups/${groupID}/players`
-      );
+      const response = await fetch(`/groups/${groupID}/players`);
 
       const jsonData = await response.json();
       console.log(JSON.stringify(jsonData));
@@ -50,7 +47,7 @@ function InvitePlayerModal({ groupID }) {
   const sendGroupInvite = async (groupID, player_id) => {
     try {
       const body = {};
-      const response = await fetch("http://localhost:5000/invite", {
+      const response = await fetch("/invite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -73,6 +70,11 @@ function InvitePlayerModal({ groupID }) {
         } else if (data === 2) {
           responseMessage = `That player is already a member of this group!`;
         } else if (data === 3) {
+          let token = document.head.querySelector('meta[name="csrf-token"]');
+
+          axios.post(`/groups/1/invite/${inviteEmail}`, {
+            playerEmail: inviteEmail,
+          });
           responseMessage = `Successfully invited ${inviteEmail} to group!`;
         }
         alert(responseMessage);

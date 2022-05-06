@@ -29,7 +29,6 @@ router.get("/", jwtRequired, async (req, res) => {
   }
 });
 
-// get a single player by player id
 router.get("/:player_id", jwtRequired, async (req, res) => {
   try {
     console.log(req.params);

@@ -11,7 +11,7 @@ const ListGroupPlayers = ({ groupID }) => {
   // delete player function
   const deletePlayer = async (id) => {
     try {
-      const deletePlayer = await fetch(`http://localhost:5000/players/${id}`, {
+      const deletePlayer = await fetch(`/players/${id}`, {
         method: "DELETE",
       });
 
@@ -23,9 +23,7 @@ const ListGroupPlayers = ({ groupID }) => {
 
   const getPlayers = async (group_id) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/groups/${group_id}/players`
-      );
+      const response = await fetch(`/groups/${group_id}/players`);
       const jsonData = await response.json();
       setPlayers(jsonData);
     } catch (err) {

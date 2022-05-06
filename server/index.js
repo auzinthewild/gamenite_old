@@ -36,10 +36,28 @@ app.use(
   })
 );
 
-app.use(csurf());
 app.use(passport.initialize());
+app.use(csurf({ cookie: false }));
+// Console log sessions
+app.use(function (req, res, next) {
+  console.log(`req session ${JSON.stringify(req.session.csrfSecret)}`);
+  next();
+});
 //app.use(limiter);
+const jwtRequired = passport.authenticate("jwt", { session: false });
+app.post(
+  "/groups/:group_id/invite/:player_email",
 
+  async (req, res) => {
+    console.log(`req ${JSON.stringify(req.headers)}`);
+    try {
+      sendMail();
+      console.log("email sent!");
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+);
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/games", gamesRoutes);

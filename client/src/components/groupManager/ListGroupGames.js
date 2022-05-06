@@ -9,7 +9,7 @@ const ListGroupGames = ({ groupID }) => {
   // delete game function
   const deleteGroupGame = async (id) => {
     try {
-      const deleteGroupGame = await fetch(`http://localhost:5000/games/${id}`, {
+      const deleteGroupGame = await fetch(`/games/${id}`, {
         method: "DELETE",
       });
 
@@ -25,9 +25,7 @@ const ListGroupGames = ({ groupID }) => {
   // get all the games the group owns
   const getGroupGames = async (group_id) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/groups/${group_id}/games`
-      );
+      const response = await fetch(`/groups/${group_id}/games`);
       const jsonData = await response.json();
       //   console.log(jsonData);
       setGroupGames(jsonData);
