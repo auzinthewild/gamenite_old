@@ -8,7 +8,6 @@ const jwtRequired = passport.authenticate("jwt", { session: false });
 // create a group
 router.post("/", jwtRequired, async (req, res) => {
   try {
-    console.log(req.body);
     const { group_name } = req.body;
     const newGroup = await pool.query(
       'INSERT INTO "game-group" (group_name) VALUES($1) RETURNING *',
@@ -33,7 +32,6 @@ router.get("/", jwtRequired, async (req, res) => {
 // get a single group
 router.get("/:group_id", jwtRequired, async (req, res) => {
   try {
-    console.log(req.params);
     const { group_id } = req.params;
     const singleGroup = await pool.query(
       'SELECT * FROM "game-group" WHERE group_id = $1',
@@ -48,7 +46,6 @@ router.get("/:group_id", jwtRequired, async (req, res) => {
 // get all players in a group using the the group_id
 router.get("/:group_id/players", jwtRequired, async (req, res) => {
   try {
-    console.log(req.params);
     const { group_id } = req.params;
     const groupPlayers = await pool.query(
       'SELECT * FROM "group_players" LEFT JOIN players ON group_players.player_id = players.player_id WHERE group_id = $1',
@@ -63,7 +60,6 @@ router.get("/:group_id/players", jwtRequired, async (req, res) => {
 // get all games in a group using the group_id
 router.get("/:group_id/games", jwtRequired, async (req, res) => {
   try {
-    console.log(req.params);
     const { group_id } = req.params;
     const groupPlayers = await pool.query(
       'SELECT * FROM "group_games" LEFT JOIN games ON group_games.game_id = games.game_id WHERE group_id = $1',
@@ -78,7 +74,6 @@ router.get("/:group_id/games", jwtRequired, async (req, res) => {
 // add a game to the group inventory using the group_id and game_id
 router.post("/:group_id/games", jwtRequired, async (req, res) => {
   try {
-    console.log(req.body);
     const { group_id } = req.params;
     const { game_id } = req.body;
     const newGame = await pool.query(
@@ -94,7 +89,6 @@ router.post("/:group_id/games", jwtRequired, async (req, res) => {
 // delete a game from the group inventory using the group_id and game_id
 router.delete("/:group_id/games", jwtRequired, async (req, res) => {
   try {
-    console.log(req.body);
     const { group_id } = req.params;
     const { game_id } = req.body;
     const deleteGame = await pool.query(
@@ -110,7 +104,6 @@ router.delete("/:group_id/games", jwtRequired, async (req, res) => {
 // add a player to the group using the group_id and player_id
 router.post("/:group_id/players", jwtRequired, async (req, res) => {
   try {
-    console.log(req.body);
     const { group_id } = req.params;
     const { player_id } = req.body;
     const newPlayer = await pool.query(
@@ -126,7 +119,6 @@ router.post("/:group_id/players", jwtRequired, async (req, res) => {
 // delete a player from the group roster using the group_id and player_id
 router.delete("/:group_id/players", jwtRequired, async (req, res) => {
   try {
-    console.log(req.body);
     const { group_id } = req.params;
     const { player_id } = req.body;
     const deletePlayer = await pool.query(
@@ -142,8 +134,6 @@ router.delete("/:group_id/players", jwtRequired, async (req, res) => {
 // update a group
 router.put("/:group_id", jwtRequired, async (req, res) => {
   try {
-    console.log(req.params);
-    console.log(req.body);
     const { group_id } = req.params;
     const { group_name } = req.body;
     const singleGroup = await pool.query(
@@ -173,7 +163,6 @@ router.delete("/:group_id", jwtRequired, async (req, res) => {
 // get all events for a group using the group_id
 router.get("/:group_id/events", jwtRequired, async (req, res) => {
   try {
-    console.log(req.params);
     const { group_id } = req.params;
     const groupEvents = await pool.query(
       'SELECT * FROM "events" WHERE group_id = $1',
@@ -210,28 +199,12 @@ router.post(
   "/:group_id/invite/:player_email",
   jwtRequired,
   async (req, res) => {
-    console.log(`req ${JSON.stringify(req.headers)}`);
     try {
       sendMail();
-      console.log("email sent!");
     } catch (error) {
       console.error(error.message);
     }
   }
 );
-
-// router.post(
-//   "/:group_id/invite/:player_email",
-
-//   async (req, res) => {
-//     console.log(`req ${JSON.stringify(req.headers)}`);
-//     try {
-//       sendMail();
-//       console.log("email sent!");
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   }
-// );
 
 module.exports = router;

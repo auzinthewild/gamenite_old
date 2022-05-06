@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import React, { Fragment, useEffect, useState, createContext } from "react";
 import { getPlayerInfo } from "./PlayerInfo";
+import LoopCircleLoading from "./components/LoopCircleLoading";
 
 // COMPONENTS
 import { GroupManager } from "./components/groupManager";
@@ -18,7 +19,14 @@ function App() {
     playerID: null,
     playerName: "",
     playerEmail: "",
-    playerGroupIDs: [],
+    playerGroupIDs: null,
+  });
+  const [currentGroupInfo, setCurrentGroupInfo] = useState({
+    groupID: null,
+    groupName: "",
+    groupPlayers: [],
+    groupGames: [],
+    groupEvents: [],
   });
   const [csrfToken, setCsrfToken] = useState("");
 
@@ -49,21 +57,42 @@ function App() {
   }, [auth]);
 
   useEffect(() => {
-    if (playerInfo.playerGroupIDs.length === 1) {
-      setCurrentGroup(playerInfo.playerGroupIDs[0]);
-    } else if (playerInfo.playerGroupIDs.length > 1) {
-      setCurrentGroup(-1);
-    } else if (playerInfo.playerGroupIDs.length === 0) {
-      setCurrentGroup(0);
+    if (playerInfo.playerGroupIDs) {
+      if (
+        playerInfo.playerGroupIDs.length === 1 &&
+        playerInfo.playerGroupIDs[0] !== 0
+      ) {
+        setCurrentGroup(playerInfo.playerGroupIDs[0]);
+      } else if (playerInfo.playerGroupIDs.length > 1) {
+        setCurrentGroup([-1, -1]);
+      } else if (
+        playerInfo.playerGroupIDs.length === 0 &&
+        playerInfo.playerGroupIDs[0] === 0
+      ) {
+        setCurrentGroup([0, 0]);
+      }
+
+      console.log(`group length ${playerInfo.playerGroupIDs.length}`);
     }
-    console.log(`group length ${playerInfo.playerGroupIDs.length}`);
   }, [playerInfo]);
 
+  useEffect(() => {
+    if (currentGroup && currentGroup[0] > 0) {
+      console.log("");
+    }
+  }, [currentGroup]);
+
   if (auth === null) {
-    return <Loading />;
+    return <LoopCircleLoading />;
   }
 
-  if (auth && currentGroup !== -1 && currentGroup !== 0) {
+  if (auth && currentGroup.length === 0) {
+    return (
+      <div>
+        <LoopCircleLoading />
+      </div>
+    );
+  } else if (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0) {
     return (
       <Fragment>
         <div className="container">
@@ -75,15 +104,22 @@ function App() {
         </div>
       </Fragment>
     );
-  } else if (auth && currentGroup === -1) {
+  } else if (auth && currentGroup[0] === -1) {
     return (
       <Fragment>
-        <PlayerContext.Provider value={{ playerInfo, setCurrentGroup }}>
+        <PlayerContext.Provider
+          value={{
+            playerInfo,
+            setCurrentGroup,
+            currentGroupInfo,
+            setCurrentGroupInfo,
+          }}
+        >
           <GroupSelector />
         </PlayerContext.Provider>
       </Fragment>
     );
-  } else if (auth && currentGroup === 0) {
+  } else if (auth && currentGroup[0] === 0) {
     return (
       <Fragment>
         <div className="container">

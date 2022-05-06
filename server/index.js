@@ -39,10 +39,10 @@ app.use(
 app.use(passport.initialize());
 app.use(csurf({ cookie: false }));
 // Console log sessions
-app.use(function (req, res, next) {
-  console.log(`req session ${JSON.stringify(req.session.csrfSecret)}`);
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log(`req session ${JSON.stringify(req.session.csrfSecret)}`);
+//   next();
+// });
 //app.use(limiter);
 
 // ROUTES

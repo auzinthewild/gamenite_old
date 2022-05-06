@@ -23,8 +23,6 @@ const sendMail = () => {
       console.log("Email sent: " + info.response);
     }
   });
-
-  console.log("gone!");
 };
 
 module.exports = sendMail;
