@@ -14,7 +14,7 @@ import { Home, Loading } from "./routes";
 export const PlayerContext = createContext();
 
 function App() {
-  const [auth, setAuth] = useState(null); // IF WE CHANGE THIS INITIAL VALUE WE GET DIFFERENT PAGES
+  const [auth, setAuth] = useState(null);
   const [currentGroup, setCurrentGroup] = useState([]);
   const [playerInfo, setPlayerInfo] = useState({
     playerID: null,
@@ -99,13 +99,11 @@ function App() {
   if (auth && currentGroup[0] > 0 && currentGroupInfo.groupID != null) {
     return (
       <Fragment>
-        <div className="container">
-          <PlayerContext.Provider
-            value={{ playerInfo, currentGroup, currentGroupInfo }}
-          >
-            <GroupManager />
-          </PlayerContext.Provider>{" "}
-        </div>
+        <PlayerContext.Provider
+          value={{ playerInfo, currentGroup, currentGroupInfo }}
+        >
+          <GroupManager />
+        </PlayerContext.Provider>{" "}
       </Fragment>
     );
   } else if (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0) {

@@ -12,15 +12,8 @@ const GroupManager = () => {
 
   return (
     <>
-      <div>
-        <p>
-          Hi, {playerInfo.playerName}! You are logged in as{" "}
-          {playerInfo.playerEmail}.{" "}
-          <a className="App-link" href={"/auth/logout"}>
-            Logout
-          </a>
-        </p>
-        <GroupHeader />
+      <GroupHeader />
+      <div className="container">
         <ListGroupPlayers />
         <ListGroupGames />
         <ListGroupEvents />
