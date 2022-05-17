@@ -1,7 +1,7 @@
 const express = require("express");
 const pool = require("../db");
 const passport = require("passport");
-const sendMail = require("../invitePlayer");
+const { sendMail, acceptInvite } = require("../invitePlayer");
 const router = express.Router();
 const jwtRequired = passport.authenticate("jwt", { session: false });
 
@@ -180,22 +180,27 @@ router.post(
   jwtRequired,
   async (req, res) => {
     try {
-      const { player_email, group_id, group_name } = req.body;
-      sendMail(player_email, group_id, group_name);
+      console.log(JSON.stringify(req.body));
+      const { playerEmail, groupID, groupName } = req.body;
+      // console.log(player_email, group_id, group_name);
+      sendMail(playerEmail, groupID, groupName);
     } catch (error) {
       console.error(error.message);
     }
   }
 );
 
-// check if a player invite exists for a group
-router.get("/:group_id/invite/:player_email", jwtRequired, async (req, res) => {
+// return all pending group invites
+router.get("/:group_id/invites", jwtRequired, async (req, res) => {
   try {
-    const inviteExists = await pool.query(
-      `SELECT players.player_id, group_invites.join_key, group_invites.group_id FROM players LEFT JOIN group_invites ON players.player_id = group_invites.player_id WHERE players.player_id = $1 AND group_invites.group_id = $2`,
-      [player_id, group_id]
+    const { group_id } = req.params;
+    const playerInvites = await pool.query(
+      `SELECT group_invites.join_key, group_invites.group_id, group_invites.player_email FROM group_invites WHERE group_invites.group_id = $1`,
+      [group_id]
     );
+    res.json(playerInvites.rows);
   } catch (error) {
+    console.log("boo!");
     console.error(error.message);
   }
 });
@@ -203,17 +208,23 @@ router.get("/:group_id/invite/:player_email", jwtRequired, async (req, res) => {
 router.get("/:group_id/join", async (req, res) => {
   try {
     const { group_id } = req.params;
-    const { player_id, join_key } = req.query;
+    const { player_email, join_key } = req.query;
     console.log(JSON.stringify(req.params), JSON.stringify(req.query));
-    const playerKeyMatch = await pool.query(
-      `SELECT players.player_id, group_invites.join_key, group_invites.group_id FROM players LEFT JOIN group_invites ON players.player_id = group_invites.player_id WHERE players.player_id = $1 AND group_invites.group_id = $2`,
-      [player_id, group_id]
-    );
-    const tableJoinKey = JSON.stringify(playerKeyMatch.rows[0].join_key);
-    const tableGroupID = JSON.stringify(playerKeyMatch.rows[0].group_id);
-    if (group_id === tableGroupID && join_key === tableJoinKey) {
-      let v;
-    }
+    const playerKeyMatch = await pool
+      .query(
+        `SELECT join_key, group_id, player_email FROM group_invites WHERE player_email = $1 AND group_id = $2 and join_key = $3`,
+        [player_email, group_id, join_key]
+      )
+      .then((data) => {
+        console.log(`PLAYER KEY MATCH ${JSON.stringify(data)}`);
+        if (!data.rows[0]) {
+          console.log("no match");
+        } else {
+          acceptInvite(player_email, group_id, join_key).then(() => {
+            console.log("Successfully joined group!");
+          });
+        }
+      });
 
     // res.json(playerKeyMatch.rows[0]);
   } catch (error) {

@@ -1,11 +1,11 @@
-import react, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { PlayerContext } from "../../App";
 
 function InvitePlayerModal() {
-  const { currentGroup, csrfToken } = useContext(PlayerContext);
+  const { currentGroup } = useContext(PlayerContext);
   const groupID = currentGroup[0];
   const groupName = currentGroup[1];
   const [show, setShow] = useState(false);
@@ -25,61 +25,74 @@ function InvitePlayerModal() {
     }
   };
 
-  const checkNotInGroup = async (groupID, player_id) => {
+  const checkNotInGroup = async (groupID, player_id, inviteEmail) => {
     if (!player_id) {
       return 1;
     }
 
     try {
       const response = await fetch(`/groups/${groupID}/players`);
-      const jsonData = await response.json();
+      const jsonData = await response.json().then();
       let playerIDs = [];
       jsonData.forEach((element) => {
         playerIDs.push(element.player_id);
       });
-      let exists = playerIDs.includes(player_id);
-      return exists ? 2 : 3;
+
+      const alreadyInGroup = playerIDs.includes(player_id);
+      return alreadyInGroup;
     } catch (err) {
       console.error(err.message);
       alert(responseMessage);
     }
   };
 
-  // const sendGroupInvite = async (groupID, player_id) => {
-  //   try {
-  //     const body = {};
-  //     const response = await fetch("/invite", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(body),
-  //     });
-  //     //   console.log(response);
-  //     window.location = "/";
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // };
+  const checkInvites = async (groupID, player_id, inviteEmail) => {
+    try {
+      const response = await fetch(`/groups/${groupID}/invites`);
+      const jsonData = await response.json();
+
+      let playerInvites = [];
+      jsonData.forEach((element) => {
+        playerInvites.push(element.player_email);
+      });
+      const alreadySentInvite = playerInvites.includes(inviteEmail);
+      return alreadySentInvite;
+    } catch (err) {
+      console.error(err.message);
+      alert(responseMessage);
+    }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     checkValidEmail(inviteEmail).then((playerID) => {
-      checkNotInGroup(groupID, playerID).then((data) => {
-        if (data === 1) {
-          responseMessage =
-            "A player with that email address could not be found.";
-        } else if (data === 2) {
-          responseMessage = `That player is already a member of this group!`;
-        } else if (data === 3) {
-          axios.post(`/groups/1/invite/${inviteEmail}`, {
-            playerEmail: inviteEmail,
-            groupID: groupID,
-            groupName: groupName,
-          });
-          responseMessage = `Successfully invited ${inviteEmail} to group!`;
-        }
+      if (!playerID) {
+        responseMessage =
+          "A player with that email address could not be found.";
         alert(responseMessage);
-      });
+      } else {
+        checkNotInGroup(groupID, playerID, inviteEmail).then((data) => {
+          if (data) {
+            responseMessage = `That player is already a member of this group!`;
+            alert(responseMessage);
+          } else {
+            checkInvites(groupID, playerID, inviteEmail).then((data2) => {
+              if (data2) {
+                responseMessage = `That player has already been sent an invite to this group which is pending!`;
+                alert(responseMessage);
+              } else {
+                axios.post(`/groups/1/invite/${inviteEmail}`, {
+                  playerEmail: inviteEmail,
+                  groupID: groupID,
+                  groupName: groupName,
+                });
+                responseMessage = `Successfully invited ${inviteEmail} to group!`;
+                alert(responseMessage);
+              }
+            });
+          }
+        });
+      }
     });
   };
 
