@@ -6,7 +6,8 @@ import { PlayerContext } from "../../App";
 
 function InvitePlayerModal() {
   const { currentGroup, csrfToken } = useContext(PlayerContext);
-  let groupID = currentGroup[0];
+  const groupID = currentGroup[0];
+  const groupName = currentGroup[1];
   const [show, setShow] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   let responseMessage = "";
@@ -72,6 +73,8 @@ function InvitePlayerModal() {
         } else if (data === 3) {
           axios.post(`/groups/1/invite/${inviteEmail}`, {
             playerEmail: inviteEmail,
+            groupID: groupID,
+            groupName: groupName,
           });
           responseMessage = `Successfully invited ${inviteEmail} to group!`;
         }

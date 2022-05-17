@@ -1,6 +1,5 @@
 import "./App.css";
 import axios from "axios";
-import Button from "react-bootstrap/Button";
 import React, { Fragment, useEffect, useState, createContext } from "react";
 import { getGroupInfo } from "./GroupInfo";
 import { getPlayerInfo } from "./PlayerInfo";
@@ -9,7 +8,7 @@ import LoopCircleLoading from "./components/LoopCircleLoading";
 // COMPONENTS
 import { GroupManager } from "./components/groupManager";
 import GroupSelector from "./components/GroupSelector";
-import { Home, Loading } from "./routes";
+import { Home } from "./components";
 
 export const PlayerContext = createContext();
 

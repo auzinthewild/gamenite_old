@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 import "../App.css";
 
 function Home() {
@@ -6,9 +7,7 @@ function Home() {
     <div className="App">
       <header className="App-header">
         <p>You are not logged in</p>
-        <a className="App-link" href={"/auth/login"}>
-          Login Here
-        </a>
+        <Button href={"/auth/login"}>Login Here</Button>
       </header>
     </div>
   );

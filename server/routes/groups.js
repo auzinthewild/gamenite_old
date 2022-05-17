@@ -175,36 +175,50 @@ router.get("/:group_id/events", jwtRequired, async (req, res) => {
 });
 
 // invite a player to group based on player email
-// router.post(
-//   "/:group_id/invite/:player_email",
-//   jwtRequired,
-//   async (req, res) => {
-//     try {
-//       console.log(req.body);
-//       const { group_id, player_email } = req.params;
-//       const { player_id } = req.body;
-//       const newPlayer = await pool.query(
-//         'INSERT INTO "group_players" (group_id, player_id) VALUES($1, $2) RETURNING *',
-//         [group_id, player_id]
-//       );
-//       res.json(newPlayer.rows[0]);
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   }
-// );
-
-// invite a player to group based on player email
 router.post(
   "/:group_id/invite/:player_email",
   jwtRequired,
   async (req, res) => {
     try {
-      sendMail();
+      const { player_email, group_id, group_name } = req.body;
+      sendMail(player_email, group_id, group_name);
     } catch (error) {
       console.error(error.message);
     }
   }
 );
+
+// check if a player invite exists for a group
+router.get("/:group_id/invite/:player_email", jwtRequired, async (req, res) => {
+  try {
+    const inviteExists = await pool.query(
+      `SELECT players.player_id, group_invites.join_key, group_invites.group_id FROM players LEFT JOIN group_invites ON players.player_id = group_invites.player_id WHERE players.player_id = $1 AND group_invites.group_id = $2`,
+      [player_id, group_id]
+    );
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+router.get("/:group_id/join", async (req, res) => {
+  try {
+    const { group_id } = req.params;
+    const { player_id, join_key } = req.query;
+    console.log(JSON.stringify(req.params), JSON.stringify(req.query));
+    const playerKeyMatch = await pool.query(
+      `SELECT players.player_id, group_invites.join_key, group_invites.group_id FROM players LEFT JOIN group_invites ON players.player_id = group_invites.player_id WHERE players.player_id = $1 AND group_invites.group_id = $2`,
+      [player_id, group_id]
+    );
+    const tableJoinKey = JSON.stringify(playerKeyMatch.rows[0].join_key);
+    const tableGroupID = JSON.stringify(playerKeyMatch.rows[0].group_id);
+    if (group_id === tableGroupID && join_key === tableJoinKey) {
+      let v;
+    }
+
+    // res.json(playerKeyMatch.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
 
 module.exports = router;

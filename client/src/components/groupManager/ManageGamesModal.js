@@ -14,7 +14,7 @@ function ManageGames() {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Add Games to Library
+        Manage Game Library
       </Button>
 
       <Modal show={show} onHide={handleClose}>

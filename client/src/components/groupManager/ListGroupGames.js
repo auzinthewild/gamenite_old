@@ -13,7 +13,7 @@ const ListGroupGames = () => {
   return (
     <Fragment>
       <div className="section-container">
-        <h2 className="header-title">Games Library</h2>
+        <h2 className="header-title">Game Library</h2>
 
         <Table striped>
           <thead>
