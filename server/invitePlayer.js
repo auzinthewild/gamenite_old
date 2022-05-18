@@ -94,6 +94,7 @@ const acceptInvite = async (player_email, group_id, join_key) => {
       removePlayerInvite(join_key);
     });
   });
+  // return groupName;
 };
 
 module.exports = { sendMail, acceptInvite };

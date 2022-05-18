@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import Table from "react-bootstrap/Table";
-import Card from "react-bootstrap/Card";
 import InvitePlayerModal from "./InvitePlayerModal";
 import { PlayerContext } from "../../App";
 

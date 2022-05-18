@@ -184,6 +184,7 @@ router.post(
       const { playerEmail, groupID, groupName } = req.body;
       // console.log(player_email, group_id, group_name);
       sendMail(playerEmail, groupID, groupName);
+      res.end();
     } catch (error) {
       console.error(error.message);
     }
@@ -212,7 +213,7 @@ router.get("/:group_id/join", async (req, res) => {
     console.log(JSON.stringify(req.params), JSON.stringify(req.query));
     const playerKeyMatch = await pool
       .query(
-        `SELECT join_key, group_id, player_email FROM group_invites WHERE player_email = $1 AND group_id = $2 and join_key = $3`,
+        `SELECT group_invites.join_key, group_invites.group_id, group_invites.player_email, "game-group".group_name FROM group_invites LEFT JOIN "game-group" on group_invites.group_id = "game-group".group_id WHERE player_email = $1 AND group_invites.group_id = $2 and join_key = $3`,
         [player_email, group_id, join_key]
       )
       .then((data) => {
@@ -220,13 +221,14 @@ router.get("/:group_id/join", async (req, res) => {
         if (!data.rows[0]) {
           console.log("no match");
         } else {
+          const groupName = data.rows[0].group_name;
           acceptInvite(player_email, group_id, join_key).then(() => {
-            console.log("Successfully joined group!");
+            res.redirect(
+              `http://localhost:3000/JoinedGroup?groupName=${groupName}`
+            );
           });
         }
       });
-
-    // res.json(playerKeyMatch.rows[0]);
   } catch (error) {
     console.error(error.message);
   }
