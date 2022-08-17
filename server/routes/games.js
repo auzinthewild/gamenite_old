@@ -100,25 +100,29 @@ router.get("/search", async (req, res) => {
     );
     // console.log(gameListXML.data);
     const gameListXML = gameListData.data;
-    // console.log(gameListXML);
+    console.log(gameListXML);
     // const items = gameListXML.getElementsByTagName("item");
     // for (var i = 0; i < items.length; i++) {
     //   const itemId = items[i].id;
     //   console.log(itemId);
     // }
-    let gameIDs = [];
+    let searchResults = [];
+
     parseString(gameListXML, (err, result) => {
-      console.log(result.items.item[1]["$"].id);
       const items = result.items.item;
 
       for (let i = 0; i < items.length; i++) {
+        console.log(items[i]["name"][0]["$"].value);
         console.log(items[i]["$"].id);
-        gameIDs.push(items[i]["$"].id);
+        searchResults.push({
+          gameID: items[i]["$"].id,
+          gameName: items[i]["name"][0]["$"].value,
+        });
       }
-      console.log(gameIDs);
+      console.log(searchResults);
     });
 
-    res.json(`Search results displayed!`);
+    res.json(JSON.stringify(searchResults));
   } catch (error) {
     console.error(error.message);
   }
