@@ -5,6 +5,7 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import JoinedGroup from "./routes/JoinedGroup";
+import GamesManager from "./routes/GamesManager";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="JoinedGroup" element={<JoinedGroup />} />
+        <Route path="/gamesManager" element={<GamesManager groupInfo />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

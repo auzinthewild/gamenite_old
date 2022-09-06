@@ -96,6 +96,8 @@ function App() {
     );
   }
   if (auth && currentGroup[0] > 0 && currentGroupInfo.groupID != null) {
+    sessionStorage.setItem("currentGroupName", currentGroupInfo.groupName);
+    sessionStorage.setItem("currentGroupId", currentGroupInfo.groupID);
     return (
       <Fragment>
         <PlayerContext.Provider

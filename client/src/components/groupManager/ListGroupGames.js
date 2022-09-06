@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from "react";
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { ManageGamesModal } from ".";
@@ -37,7 +38,9 @@ const ListGroupGames = () => {
             ))}
           </tbody>
         </Table>
-        <ManageGamesModal />
+        <Button onClick={() => (window.location = "/gamesManager")}>
+          Games Manager
+        </Button>
       </div>
     </Fragment>
   );
