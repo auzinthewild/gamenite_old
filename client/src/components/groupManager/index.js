@@ -5,4 +5,3 @@ export { default as ManageGamesModal } from "./ManageGamesModal";
 export { default as AddEventModal } from "./CreateEventModal";
 export { default as InvitePlayerModal } from "./InvitePlayerModal";
 export { default as GroupManager } from "./GroupManager";
-export { default as GroupHeader } from "./GroupHeader";

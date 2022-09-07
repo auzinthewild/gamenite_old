@@ -1,25 +1,34 @@
 import "./App.css";
 import axios from "axios";
 import React, { Fragment, useEffect, useState, createContext } from "react";
-import { getGroupInfo } from "./GroupInfo";
 import { getPlayerInfo } from "./PlayerInfo";
 import LoopCircleLoading from "./components/LoopCircleLoading";
+import { Routes, Route } from "react-router-dom";
+
+// ROUTES
+import { GamesManager } from "./routes/GamesManager";
 
 // COMPONENTS
 import { GroupManager } from "./components/groupManager";
 import GroupSelector from "./components/GroupSelector";
-import { Home } from "./components";
+import { Home, Header } from "./components";
 
 export const PlayerContext = createContext();
 
 function App() {
   const [auth, setAuth] = useState(null);
-  const [currentGroup, setCurrentGroup] = useState([]);
+
   const [playerInfo, setPlayerInfo] = useState({
     playerID: null,
     playerName: "",
     playerEmail: "",
-    playerGroupIDs: null,
+    playerGroupIDs: [],
+  });
+  const [playerGroupInfo, setPlayerGroupInfo] = useState({
+    selectedGroup: null,
+    multipleGroups: false,
+    hasGroups: false,
+    groupIDs: [],
   });
   const [currentGroupInfo, setCurrentGroupInfo] = useState({
     groupID: null,
@@ -58,71 +67,82 @@ function App() {
 
   useEffect(() => {
     if (playerInfo.playerGroupIDs) {
-      if (
-        playerInfo.playerGroupIDs.length === 1 &&
-        playerInfo.playerGroupIDs[0] !== 0
-      ) {
-        setCurrentGroup(playerInfo.playerGroupIDs[0]);
-      } else if (playerInfo.playerGroupIDs.length > 1) {
-        setCurrentGroup([-1, -1]);
-      } else if (
-        playerInfo.playerGroupIDs.length === 0 &&
-        playerInfo.playerGroupIDs[0] === 0
-      ) {
-        setCurrentGroup([0, 0]);
+      if (playerInfo.playerGroupIDs.length === 1) {
+        setPlayerGroupInfo({
+          selectedGroup: playerInfo.playerGroupIDs[0]["id"],
+          multipleGroups: false,
+          hasGroups: true,
+          groupIDs: [
+            {
+              id: playerInfo.playerGroupIDs[0]["id"],
+              name: playerInfo.playerGroupIDs[0]["name"],
+            },
+          ],
+        });
+      } else {
+        const groupArr = [];
+        playerInfo.playerGroupIDs.forEach((group) => {
+          groupArr.push({
+            id: group["id"],
+            name: group["name"],
+          });
+        });
+        setPlayerGroupInfo({
+          selectedGroup: null,
+          multipleGroups: true,
+          hasGroups: true,
+          groupIDs: groupArr,
+        });
       }
-
-      console.log(`group length ${playerInfo.playerGroupIDs.length}`);
     }
   }, [playerInfo]);
 
-  useEffect(() => {
-    if (currentGroup && currentGroup[0] > 0) {
-      getGroupInfo(currentGroup).then((data) => {
-        setCurrentGroupInfo(data);
-      });
-    }
-  }, [currentGroup]);
+  // useEffect(() => {
+  //   if (currentGroup && currentGroup[0] > 0) {
+  //     getGroupInfo(currentGroup).then((data) => {
+  //       console.log(data);
+  //       setCurrentGroupInfo(data);
+  //     });
+  //   }
+  // }, [currentGroup]);
 
-  if (auth === null) {
+  //  (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0)
+
+  if (
+    auth === null ||
+    (auth && playerGroupInfo.groupIDs.length === 0) ||
+    (auth && playerGroupInfo.selectedGroup && !currentGroupInfo.groupID)
+  ) {
     return <LoopCircleLoading />;
-  }
-
-  if (auth && currentGroup.length === 0) {
-    return (
-      <div>
-        <LoopCircleLoading />
-      </div>
-    );
-  }
-  if (auth && currentGroup[0] > 0 && currentGroupInfo.groupID != null) {
+  } else if (
+    auth &&
+    playerGroupInfo.selectedGroup &&
+    currentGroupInfo.groupID
+  ) {
     sessionStorage.setItem("currentGroupName", currentGroupInfo.groupName);
     sessionStorage.setItem("currentGroupId", currentGroupInfo.groupID);
     return (
       <Fragment>
-        <PlayerContext.Provider
-          value={{ playerInfo, currentGroup, currentGroupInfo }}
-        >
-          <GroupManager />
-        </PlayerContext.Provider>{" "}
+        <PlayerContext.Provider value={{ playerInfo, currentGroupInfo }}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<GroupManager />} />
+            <Route path="gamesManager" element={<GamesManager />} />
+          </Routes>
+        </PlayerContext.Provider>
       </Fragment>
     );
-  } else if (auth && currentGroup[0] !== -1 && currentGroup[0] !== 0) {
-    return (
-      <div>
-        <LoopCircleLoading />
-      </div>
-    );
-  }
-
-  if (auth && currentGroup[0] === -1) {
+  } else if (
+    auth &&
+    playerGroupInfo.multipleGroups === true &&
+    playerGroupInfo.selectedGroup === null
+  ) {
     return (
       <Fragment>
         <PlayerContext.Provider
           value={{
             playerInfo,
-            setCurrentGroup,
-            currentGroupInfo,
+            setPlayerGroupInfo,
             setCurrentGroupInfo,
           }}
         >
@@ -130,7 +150,7 @@ function App() {
         </PlayerContext.Provider>
       </Fragment>
     );
-  } else if (auth && currentGroup[0] === 0) {
+  } else if (auth && playerGroupInfo.hasGroups === false) {
     return (
       <Fragment>
         <div className="container">

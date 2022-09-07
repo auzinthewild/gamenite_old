@@ -24,7 +24,10 @@ export const getPlayerInfo = async (playerEmail) => {
     const response = await fetch(`/players/group/${playerData.playerID}`);
     const jsonData = await response.json();
     jsonData.forEach((group) =>
-      playerData.playerGroupIDs.push([group.group_id, group.group_name])
+      playerData.playerGroupIDs.push({
+        id: group.group_id,
+        name: group.group_name,
+      })
     );
     // playerData.playerGroupID = jsonData.group_id;
   } catch (err) {

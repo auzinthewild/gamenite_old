@@ -2,8 +2,8 @@ import axios from "axios";
 
 export const getGroupInfo = async (groupID) => {
   let groupData = {
-    groupID: groupID[0],
-    groupName: groupID[1],
+    groupID: groupID["id"],
+    groupName: groupID["name"],
     groupPlayers: [],
     groupGames: [],
     groupEvents: [],

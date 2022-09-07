@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { PlayerContext } from "../../App";
 
-function InvitePlayerModal() {
+function DeleteGame({ game_id }) {
   const { currentGroupInfo } = useContext(PlayerContext);
   const groupID = currentGroupInfo["id"];
   const groupName = currentGroupInfo["name"];
@@ -13,6 +13,7 @@ function InvitePlayerModal() {
   let responseMessage = "";
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  console.log(game_id);
 
   const checkValidEmail = async (playerEmail) => {
     try {
@@ -103,7 +104,7 @@ function InvitePlayerModal() {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Invite Player
+        Delete
       </Button>
 
       <Modal show={show} onHide={handleClose}>
@@ -130,4 +131,4 @@ function InvitePlayerModal() {
   );
 }
 
-export default InvitePlayerModal;
+export default DeleteGame;
