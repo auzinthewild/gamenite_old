@@ -87,6 +87,7 @@ router.delete("/:game_id", (req, res) => {
   })(req, res);
 });
 
+// search BGG API for games
 router.get("/search", async (req, res) => {
   console.log("hi");
   try {

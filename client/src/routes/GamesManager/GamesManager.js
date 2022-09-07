@@ -1,5 +1,5 @@
 import React from "react";
-import { ListGroupGames } from "./";
+import { ListGroupGames, AddGame } from "./";
 import { GroupHeader } from "../../components";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
@@ -12,7 +12,7 @@ function GamesManager() {
         <div className="section-container">
           <h2 className="header-title">Game Library</h2>
           <ListGroupGames />
-          <Button>Add Game</Button>
+          <AddGame />
         </div>
         <Link to="/">Back</Link>
       </div>
