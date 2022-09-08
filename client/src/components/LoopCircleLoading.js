@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { commonStyle, sizeItem } from "../utils/style";
+
 const bouncedelay = keyframes`
   0%,
   80%,

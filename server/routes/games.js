@@ -99,18 +99,21 @@ router.get("/search", async (req, res) => {
       `https://boardgamegeek.com/xmlapi2/search?type=boardgame&query=${queryString}`,
       config
     );
-    // console.log(gameListXML.data);
+
     const gameListXML = gameListData.data;
     console.log(gameListXML);
-    // const items = gameListXML.getElementsByTagName("item");
-    // for (var i = 0; i < items.length; i++) {
-    //   const itemId = items[i].id;
-    //   console.log(itemId);
-    // }
+
     let searchResults = [];
 
     parseString(gameListXML, (err, result) => {
+      console.log(result.items);
+      if (result.items["$"]["total"] === "0") {
+        res.json(JSON.stringify(searchResults));
+      }
+
       const items = result.items.item;
+
+      console.log(items);
 
       for (let i = 0; i < items.length; i++) {
         console.log(items[i]["name"][0]["$"].value);
@@ -124,6 +127,63 @@ router.get("/search", async (req, res) => {
     });
 
     res.json(JSON.stringify(searchResults));
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// get game data from  BGG API
+router.get("/search/game", async (req, res) => {
+  console.log("hi");
+  try {
+    const queryString = req.query.query;
+    console.log(queryString);
+    const config = {
+      headers: { "Content-Type": "text/xml" },
+    };
+    const gameDataRaw = await axios.get(
+      `https://boardgamegeek.com/xmlapi2/thing?type=boardgame,boardgameexpansion&id=${queryString}`,
+      config
+    );
+    // console.log(gameListXML.data);
+    const gameDataXML = gameDataRaw.data;
+
+    let gameDataArr = [];
+    parseString(gameDataXML, (err, result) => {
+      const items = result.items.item;
+      // console.log(items.length);
+      for (let i = 0; i < items.length; i++) {
+        // console.log(items[i]);
+        let gameData = {
+          gameID: null,
+          gameName: "",
+          gameDesc: "",
+          gameMinPlaytime: null,
+          gameMaxPlaytime: null,
+          gameMinPlayers: null,
+          gameMaxPlayers: null,
+        };
+        gameData.gameID = Number(items[i]["$"]["id"]);
+        gameData.gameName = items[i]["name"][0]["$"]["value"];
+        gameData.gameDesc = items[i]["description"][0];
+        gameData.gameMinPlaytime = Number(
+          items[i]["minplaytime"][0]["$"]["value"]
+        );
+        gameData.gameMaxPlaytime = Number(
+          items[i]["maxplaytime"][0]["$"]["value"]
+        );
+        gameData.gameMinPlayers = Number(
+          items[i]["minplayers"][0]["$"]["value"]
+        );
+        gameData.gameMaxPlayers = Number(
+          items[i]["maxplayers"][0]["$"]["value"]
+        );
+        // console.log(gameData);
+        gameDataArr.push(gameData);
+      }
+    });
+    console.log(gameDataArr);
+    res.json(gameDataArr);
   } catch (error) {
     console.error(error.message);
   }
