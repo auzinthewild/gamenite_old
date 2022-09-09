@@ -12,6 +12,7 @@ import { GamesManager } from "./routes/GamesManager";
 import { GroupManager } from "./components/groupManager";
 import GroupSelector from "./components/GroupSelector";
 import { Home, Header } from "./components";
+import { getGroupInfo } from "./GroupInfo";
 
 export const PlayerContext = createContext();
 
@@ -68,6 +69,13 @@ function App() {
   useEffect(() => {
     if (playerInfo.playerGroupIDs) {
       if (playerInfo.playerGroupIDs.length === 1) {
+        console.log("length 1");
+        getGroupInfo({
+          id: playerInfo.playerGroupIDs[0]["id"],
+          name: playerInfo.playerGroupIDs[0]["name"],
+        }).then((data) => {
+          setCurrentGroupInfo(data);
+        });
         setPlayerGroupInfo({
           selectedGroup: playerInfo.playerGroupIDs[0]["id"],
           multipleGroups: false,
@@ -113,6 +121,13 @@ function App() {
     (auth && playerGroupInfo.groupIDs.length === 0) ||
     (auth && playerGroupInfo.selectedGroup && !currentGroupInfo.groupID)
   ) {
+    console.log("fail");
+    console.log(
+      auth,
+      playerGroupInfo.groupIDs.length,
+      playerGroupInfo.selectedGroup,
+      currentGroupInfo.groupID
+    );
     return <LoopCircleLoading />;
   } else if (
     auth &&

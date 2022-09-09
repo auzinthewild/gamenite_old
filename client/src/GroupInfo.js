@@ -8,6 +8,8 @@ export const getGroupInfo = async (groupID) => {
     groupGames: [],
     groupEvents: [],
   };
+  console.log("you are here");
+  console.log(groupID);
 
   // get group players
   try {
@@ -20,6 +22,7 @@ export const getGroupInfo = async (groupID) => {
     });
     console.log(groupData.groupPlayers);
   } catch (err) {
+    console.log("DETH");
     console.error(err.message);
   }
 
