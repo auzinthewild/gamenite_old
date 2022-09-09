@@ -15,7 +15,9 @@ function Header() {
               <Nav>
                 <NavDropdown title={playerInfo.playerName} id="nav-dropdown">
                   <NavDropdown.Item eventKey="4.1">Profile</NavDropdown.Item>
-
+                  <NavDropdown.Item eventKey="4.1">
+                    Switch Group
+                  </NavDropdown.Item>
                   <NavDropdown.Divider />
 
                   <NavDropdown.Item eventKey="4.2" href="/auth/logout">
