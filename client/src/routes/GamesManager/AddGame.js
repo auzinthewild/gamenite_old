@@ -9,8 +9,8 @@ import LoopCircleLoading from "../../components/LoopCircleLoading";
 
 function AddGame() {
   const { currentGroupInfo } = useContext(PlayerContext);
-  const groupID = currentGroupInfo["id"];
-  const groupName = currentGroupInfo["name"];
+  // const groupID = currentGroupInfo["id"];
+  // const groupName = currentGroupInfo["name"];
   const [show, setShow] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -116,12 +116,10 @@ function AddGame() {
             <label>
               <input
                 required
-                default="Search"
                 type="text"
                 value={searchTerm}
                 onChange={handleChange}
                 feedback="You must type something."
-                feedbackType="invalid"
               />
             </label>
             <Button type="submit" value="Submit">
@@ -152,12 +150,10 @@ function AddGame() {
                       {searchResults.map((game, index) => (
                         <tr key={game.gameID}>
                           <td>
-                            {" "}
                             <Form.Check
-                              value="add"
                               onChange={() => handleChecked(index)}
                               id={`${game.gameID}`}
-                              checked={checkedGames[index]}
+                              checked={checkedGames[index] || false}
                             />
                           </td>
                           <td>{game.gameName}</td>
