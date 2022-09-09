@@ -19,9 +19,7 @@ function GroupSelector() {
                   selectedGroup: groupID["id"],
                 }));
                 getGroupInfo({ id: groupID["id"], name: groupID["name"] }).then(
-                  (data) => {
-                    setCurrentGroupInfo(data);
-                  }
+                  (data) => setCurrentGroupInfo(data)
                 );
               }}
             >

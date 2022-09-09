@@ -1,4 +1,4 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -15,6 +15,8 @@ function AddGame() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchFlag, setSearchFlag] = useState(false);
+  const [gamesToAdd, setGamesToAdd] = useState([]);
+  const [checkedGames, setCheckedGames] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -48,6 +50,7 @@ function AddGame() {
         // console.log(gamesInfo);
         setSearchFlag(false);
         setSearchResults(gameData);
+
         console.log(searchFlag);
       }
     } catch (error) {
@@ -69,8 +72,33 @@ function AddGame() {
 
   const handleAddGames = (event) => {
     event.preventDefault();
-    searchForGames(searchTerm);
+
+    console.log(gamesToAdd);
   };
+
+  const handleChecked = (position) => {
+    console.log("checked");
+    const updatedCheckedState = checkedGames.map((item, index) =>
+      index === position ? !item : item
+    );
+
+    setCheckedGames(updatedCheckedState);
+
+    const currentCheckedGames = [];
+    updatedCheckedState.forEach((currentState, index) => {
+      console.log(
+        `game ${index} ${currentState} ${searchResults[index].gameID}`
+      );
+      if (currentState === true) {
+        currentCheckedGames.push(searchResults[index].gameID);
+      }
+    });
+    setGamesToAdd(currentCheckedGames);
+  };
+
+  useEffect(() => {
+    setCheckedGames(new Array(searchResults.length).fill(false));
+  }, [searchResults]);
 
   return (
     <>
@@ -99,8 +127,10 @@ function AddGame() {
             <Button type="submit" value="Submit">
               Search
             </Button>
-            <Button variant="primary" onClick={handleAddGames}>
-              Add Selected Game(s)
+          </form>
+          <form onSubmit={handleAddGames}>
+            <Button variant="primary" type="submit" value="Submit">
+              Add Selected
             </Button>
 
             {/* results */}
@@ -119,11 +149,16 @@ function AddGame() {
                       </tr>
                     </thead>
                     <tbody>
-                      {searchResults.map((game) => (
+                      {searchResults.map((game, index) => (
                         <tr key={game.gameID}>
                           <td>
                             {" "}
-                            <Form.Check value="add" id={`${game.gameID}`} />
+                            <Form.Check
+                              value="add"
+                              onChange={() => handleChecked(index)}
+                              id={`${game.gameID}`}
+                              checked={checkedGames[index]}
+                            />
                           </td>
                           <td>{game.gameName}</td>
 
