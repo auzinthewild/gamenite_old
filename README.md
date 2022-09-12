@@ -8,7 +8,7 @@ Users can create game groups, join other groups, and invite others to their grou
 
 Built with the PERN stack. The app uses auth0 for account creation and login. 
 
-## Database Diagram
+## UML Diagram
 
 ![database diagram](https://i.ibb.co/XjrXsc8/gamenitedatabase.png)
 
