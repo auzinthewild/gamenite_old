@@ -6,7 +6,7 @@ import { PlayerContext } from "../../App";
 import { GroupHeader } from "..";
 import { useNavigate } from "react-router-dom";
 import InvitePlayerModal from "./InvitePlayerModal";
-import { AddEventModal } from ".";
+import { CreateEventModal } from "../EventManager";
 
 const GroupManager = () => {
   const { playerInfo } = useContext(PlayerContext);
@@ -31,7 +31,7 @@ const GroupManager = () => {
         <div className="section-container">
           <h2 className="header-title">Upcoming Events</h2>
           <ListGroupEvents />
-          <AddEventModal />
+          <CreateEventModal />
         </div>
       </div>
     </>
