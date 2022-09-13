@@ -38,8 +38,9 @@ function App() {
     groupGames: [],
     groupEvents: [],
   });
-  const [csrfToken, setCsrfToken] = useState("");
 
+  const [csrfToken, setCsrfToken] = useState("");
+  console.log(csrfToken);
   useEffect(() => {
     axios.get("/auth/current-session").then(({ data }) => {
       setAuth(data);
@@ -55,6 +56,8 @@ function App() {
           console.log(`meep ${JSON.stringify(data)}`);
           setCsrfToken(data.csrfToken);
           axios.defaults.headers.post["X-CSRF-Token"] = data.csrfToken;
+          axios.defaults.headers.delete["X-CSRF-Token"] = data.csrfToken;
+          axios.defaults.headers.put["X-CSRF-Token"] = data.csrfToken;
         })
         .then(
           getPlayerInfo(auth.email).then((data) => {
@@ -139,7 +142,11 @@ function App() {
     return (
       <Fragment>
         <PlayerContext.Provider
-          value={{ playerInfo, currentGroupInfo, setCurrentGroupInfo }}
+          value={{
+            playerInfo,
+            currentGroupInfo,
+            setCurrentGroupInfo,
+          }}
         >
           <Header />
           <Routes>

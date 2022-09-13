@@ -88,10 +88,12 @@ router.post("/:group_id/games", jwtRequired, async (req, res) => {
 });
 
 // delete a game from the group inventory using the group_id and game_id
-router.delete("/:group_id/games", jwtRequired, async (req, res) => {
+router.delete("/:group_id/games/:game_id", jwtRequired, async (req, res) => {
   try {
-    const { group_id } = req.params;
-    const { game_id } = req.body;
+    console.log(req.params);
+    const { group_id, game_id } = req.params;
+    // const { game_id } = req.body;
+    console.log(group_id, game_id);
     const deleteGame = await pool.query(
       'DELETE FROM "group_games" WHERE group_id = $1 AND game_id = $2',
       [group_id, game_id]
