@@ -9,7 +9,7 @@ function AddEvent() {
   const [eventDetails, setEventDetails] = useState({});
 
   const handleChange = (event) => {
-    setInviteEmail(event.target.value);
+    //setInviteEmail(event.target.value);
   };
 
   const handleSubmit = (event) => {
