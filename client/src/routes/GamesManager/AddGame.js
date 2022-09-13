@@ -119,6 +119,8 @@ function AddGame() {
       ...groupInfo,
       groupGames: newGamesList,
     }));
+    setSearchResults([]);
+    setSearchTerm("");
   };
 
   const addSingleGame = async (gameData) => {
@@ -167,6 +169,11 @@ function AddGame() {
   useEffect(() => {
     setCheckedGames(new Array(searchResults.length).fill(false));
   }, [searchResults]);
+
+  useEffect(() => {
+    setSearchResults([]);
+    setSearchTerm("");
+  }, [show]);
 
   return (
     <>
