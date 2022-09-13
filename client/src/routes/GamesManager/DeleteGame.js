@@ -5,11 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import { PlayerContext } from "../../App";
 
 function DeleteGame({ gameID, gameName }) {
-  console.log(gameID);
   const { currentGroupInfo, setCurrentGroupInfo } = useContext(PlayerContext);
   const groupID = currentGroupInfo["groupID"];
-  const groupName = currentGroupInfo["groupName"];
-  console.log(groupID, groupName);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -17,10 +14,7 @@ function DeleteGame({ gameID, gameName }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     try {
-      console.log(gameID);
-      axios.delete(`/groups/${groupID}/games/${gameID}`).then((data) => {
-        console.log(data);
-      });
+      axios.delete(`/groups/${groupID}/games/${gameID}`);
       const newGamesList = currentGroupInfo.groupGames.filter(
         (game) => game.game_id !== gameID
       );
