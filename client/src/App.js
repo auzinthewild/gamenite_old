@@ -9,7 +9,7 @@ import { Routes, Route } from "react-router-dom";
 import { GamesManager } from "./routes/GamesManager";
 
 // COMPONENTS
-import { GroupManager } from "./components/groupManager";
+import { GroupManager } from "./components/GroupManager";
 import GroupSelector from "./components/GroupSelector";
 import { Home, Header } from "./components";
 import { getGroupInfo } from "./GroupInfo";

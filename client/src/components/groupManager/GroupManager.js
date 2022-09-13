@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { ListGroupPlayers, ListGroupGames, ListGroupEvents } from ".";
+import { ListGroupPlayers, ListGroupGames } from ".";
+import { ListGroupEvents } from "../EventManager/";
 import { PlayerContext } from "../../App";
-import { GroupHeader } from "../../components";
+import { GroupHeader } from "..";
 import { useNavigate } from "react-router-dom";
 import InvitePlayerModal from "./InvitePlayerModal";
 import { AddEventModal } from ".";

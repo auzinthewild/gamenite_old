@@ -121,6 +121,7 @@ function AddGame() {
     }));
     setSearchResults([]);
     setSearchTerm("");
+    document.getElementById("addSuccess").innerHTML = "Successfully added!";
   };
 
   const addSingleGame = async (gameData) => {
@@ -205,6 +206,7 @@ function AddGame() {
             <Button variant="primary" type="submit" value="Submit">
               Add Selected
             </Button>
+            <div id="addSuccess"></div>
 
             {/* results */}
 
