@@ -6,8 +6,8 @@ import { PlayerContext } from "../../App";
 
 function InvitePlayerModal() {
   const { currentGroupInfo } = useContext(PlayerContext);
-  const groupID = currentGroupInfo["id"];
-  const groupName = currentGroupInfo["name"];
+  const groupID = currentGroupInfo["groupID"];
+  const groupName = currentGroupInfo["groupName"];
   const [show, setShow] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   let responseMessage = "";
@@ -16,16 +16,18 @@ function InvitePlayerModal() {
 
   const checkValidEmail = async (playerEmail) => {
     try {
-      const response = await fetch(`/players/email/${playerEmail}`);
-      const jsonData = await response.json();
-      const player_id = jsonData.player_id;
+      const { data } = await axios.get(`/players/email/${playerEmail}`);
+      console.log(data);
+      const player_id = data.player_id;
       return player_id;
     } catch (err) {
-      //console.error(err.message);
+      console.error(err.message);
     }
   };
 
   const checkNotInGroup = async (groupID, player_id, inviteEmail) => {
+    console.log("check not in group");
+    console.log(groupID, player_id, inviteEmail);
     if (!player_id) {
       return 1;
     }
@@ -81,6 +83,7 @@ function InvitePlayerModal() {
                 responseMessage = `That player has already been sent an invite to this group which is pending!`;
                 alert(responseMessage);
               } else {
+                console.log("trying");
                 axios.post(`/groups/1/invite/${inviteEmail}`, {
                   playerEmail: inviteEmail,
                   groupID: groupID,

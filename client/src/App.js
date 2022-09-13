@@ -138,7 +138,9 @@ function App() {
     sessionStorage.setItem("currentGroupId", currentGroupInfo.groupID);
     return (
       <Fragment>
-        <PlayerContext.Provider value={{ playerInfo, currentGroupInfo }}>
+        <PlayerContext.Provider
+          value={{ playerInfo, currentGroupInfo, setCurrentGroupInfo }}
+        >
           <Header />
           <Routes>
             <Route path="/" element={<GroupManager />} />

@@ -12,23 +12,27 @@ const ListGroupGames = () => {
         <thead>
           <tr>
             <th scope="col">Name</th>
-            <th scope="col">Description</th>
+
             <th scope="col">Players</th>
-            <th scope="col">Game Duration</th>
-            <th scope="col">Modify</th>
+            <th scope="col">Game Duration (min)</th>
+            <th scope="col"> </th>
           </tr>
         </thead>
         <tbody>
           {currentGroupInfo.groupGames.map((game) => (
             <tr key={game.game_id}>
               <td>{game.game_name}</td>
-              <td>{game.game_desc}</td>
+
               <td>
                 {game.min_players} to {game.max_players}
               </td>
-              <td>{game.game_dur} hours</td>
               <td>
-                <DeleteGame game_id={game.game_id} />
+                {game.min_playtime}
+                {game.min_playtime && game.max_playtime ? " - " : ""}
+                {game.max_playtime}
+              </td>
+              <td>
+                <DeleteGame gameID={game.game_id} gameName={game.game_name} />
               </td>
             </tr>
           ))}

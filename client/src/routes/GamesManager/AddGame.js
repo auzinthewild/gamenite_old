@@ -8,8 +8,9 @@ import { PlayerContext } from "../../App";
 import LoopCircleLoading from "../../components/LoopCircleLoading";
 
 function AddGame() {
-  const { currentGroupInfo } = useContext(PlayerContext);
-  // const groupID = currentGroupInfo["id"];
+  const { currentGroupInfo, setCurrentGroupInfo } = useContext(PlayerContext);
+  const groupID = currentGroupInfo["groupID"];
+  const groupGames = currentGroupInfo["groupGames"];
   // const groupName = currentGroupInfo["name"];
   const [show, setShow] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,8 +28,7 @@ function AddGame() {
       let response = await fetch(`/games/search?query=${search}`);
       let stringJSON = await response.json();
       let jsonData = JSON.parse(stringJSON);
-      console.log(typeof jsonData);
-      console.log(jsonData[0]);
+
       const gameIDs = jsonData.map((game) => game.gameID);
       if (gameIDs.length === 0) {
         setSearchResults([
@@ -37,7 +37,6 @@ function AddGame() {
           },
         ]);
       } else {
-        console.log(gameIDs);
         let gamesInfo = [];
         let gameCommaList = "";
         gameIDs.forEach((gameID) => {
@@ -45,13 +44,20 @@ function AddGame() {
         });
         response = await fetch(`/games/search/game?query=${gameCommaList}`);
         const gameData = await response.json();
-        console.log(gameData);
+        console.log(currentGroupInfo);
+        const groupGameIDs = currentGroupInfo.groupGames.map((game) => {
+          return game.game_id;
+        });
+        console.log(groupGameIDs);
+        gameData.forEach((game, index) => {
+          if (groupGameIDs.includes(game.gameID)) {
+            gameData.splice(index, 1);
+          }
+        });
         gamesInfo.push(gameData);
-        // console.log(gamesInfo);
+        console.log(gameData);
         setSearchFlag(false);
         setSearchResults(gameData);
-
-        console.log(searchFlag);
       }
     } catch (error) {
       console.error(`error searching for BGG games - ${error}`);
@@ -60,20 +66,75 @@ function AddGame() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(searchFlag);
     setSearchFlag(true);
     searchForGames(searchTerm);
   };
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
-    // searchForGames(searchTerm);
   };
 
-  const handleAddGames = (event) => {
+  const handleAddGames = async (event) => {
     event.preventDefault();
+    const gameIDsToAdd = gamesToAdd.map((game) => {
+      return game.gameID;
+    });
+    let gamesNotInDB = [];
+    try {
+      let response = await fetch(`/games`);
+      let jsonResponse = await response.json();
+      const masterGameList = jsonResponse.map((game) => {
+        return game.game_id;
+      });
 
-    console.log(gamesToAdd);
+      gamesToAdd.forEach((game, index) => {
+        if (!masterGameList.includes(game.gameID)) {
+          gamesNotInDB.push(game);
+        }
+      });
+      console.log(gamesNotInDB);
+      gamesNotInDB.forEach((game) => {
+        addSingleGame(game);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    let newGamesList = groupGames;
+    gamesToAdd.forEach((game) => {
+      console.log(game);
+      newGamesList.push({
+        game_id: game.gameID,
+        game_name: game.gameName,
+        max_players: game.gameMaxPlayers,
+        min_players: game.gameMinPlayers,
+        max_playtime: game.gameMaxPlaytime,
+        min_playtime: game.gameMinPlaytime,
+        group_id: groupID,
+      });
+      addGroupGameRelate(game.gameID);
+    });
+    console.log(newGamesList);
+    setCurrentGroupInfo((groupInfo) => ({
+      ...groupInfo,
+      groupGames: newGamesList,
+    }));
+  };
+
+  const addSingleGame = async (gameData) => {
+    try {
+      axios.post("/games", gameData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addGroupGameRelate = async (gameID) => {
+    try {
+      axios.post(`/groups/${groupID}/games`, { game_id: gameID });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleChecked = (position) => {
@@ -90,7 +151,14 @@ function AddGame() {
         `game ${index} ${currentState} ${searchResults[index].gameID}`
       );
       if (currentState === true) {
-        currentCheckedGames.push(searchResults[index].gameID);
+        currentCheckedGames.push({
+          gameID: searchResults[index].gameID,
+          gameName: searchResults[index].gameName,
+          gameMinPlayers: searchResults[index].gameMinPlayers,
+          gameMaxPlayers: searchResults[index].gameMaxPlayers,
+          gameMinPlaytime: searchResults[index].gameMinPlaytime,
+          gameMaxPlaytime: searchResults[index].gameMaxPlaytime,
+        });
       }
     });
     setGamesToAdd(currentCheckedGames);

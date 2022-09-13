@@ -51,6 +51,7 @@ router.get("/email/:player_email", jwtRequired, async (req, res) => {
       "SELECT * FROM players WHERE player_email = $1",
       [player_email]
     );
+    console.log(`YEP ${singlePlayer.rows[0]}`);
     res.json(singlePlayer.rows[0]);
   } catch (error) {
     console.error(error.message);

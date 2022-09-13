@@ -76,6 +76,7 @@ router.post("/:group_id/games", jwtRequired, async (req, res) => {
   try {
     const { group_id } = req.params;
     const { game_id } = req.body;
+    console.log;
     const newGame = await pool.query(
       'INSERT INTO "group_games" (group_id, game_id) VALUES($1, $2) RETURNING *',
       [group_id, game_id]
@@ -180,6 +181,7 @@ router.post(
   jwtRequired,
   async (req, res) => {
     try {
+      console.log("CHEESE");
       console.log(JSON.stringify(req.body));
       const { playerEmail, groupID, groupName } = req.body;
       // console.log(player_email, group_id, group_name);

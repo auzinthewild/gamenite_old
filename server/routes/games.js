@@ -11,11 +11,24 @@ router.post("/", (req, res) => {
   passport.authenticate("jwt", { session: false }, async (err, user) => {
     try {
       console.log(req.body);
-      const { game_name, game_desc, min_players, max_players, game_dur } =
-        req.body;
+      const {
+        gameID,
+        gameName,
+        gameMinPlayers,
+        gameMaxPlayers,
+        gameMinPlaytime,
+        gameMaxPlaytime,
+      } = req.body;
       const newGame = await pool.query(
-        "INSERT INTO games (game_name, game_desc, min_players, max_players, game_dur) VALUES($1, $2, $3, $4, $5) RETURNING *",
-        [game_name, game_desc, min_players, max_players, game_dur]
+        "INSERT INTO games (game_id, game_name, min_players, max_players, min_playtime, max_playtime) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+        [
+          gameID,
+          gameName,
+          gameMinPlayers,
+          gameMaxPlayers,
+          gameMinPlaytime,
+          gameMaxPlaytime,
+        ]
       );
       res.json(newGame.rows[0]);
     } catch (error) {
